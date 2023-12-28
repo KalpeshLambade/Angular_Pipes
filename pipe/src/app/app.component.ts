@@ -1,4 +1,4 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, ElementRef, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { TodoService } from './services/todo.service';
 import { Subscription } from 'rxjs';
 
@@ -8,7 +8,7 @@ import { Subscription } from 'rxjs';
   styleUrls: ['./app.component.css']
 })
 export class AppComponent implements OnInit, OnDestroy {
-
+  @ViewChild('todoinput') todoInput!:ElementRef ;
   private todoSubscriptions!: Subscription;
   viewList: Array<{name:string,checked:boolean}> = [];
 
@@ -22,10 +22,12 @@ export class AppComponent implements OnInit, OnDestroy {
     })
   }
 
-  addNewTodo(todo: HTMLInputElement) {
-    if (todo.value) {
-      this.toDoService.addTodo(todo.value, todo.checked);
+  addNewTodo() {
+    let todo = this.todoInput.nativeElement.value;
+    if (todo) {
+      this.toDoService.addTodo(todo, false);
     }
+    this.todoInput.nativeElement.value = "";
   }
 
   ischeckClicked(todo: HTMLInputElement, index:number){
